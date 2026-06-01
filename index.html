@@ -1,0 +1,977 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Silfira | Internal Portal</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root{--terra:#A0392A;--terra-dark:#7A2820;--terra-light:#E8C4B8;--cream:#F2EAD8;--cream-dark:#E0D3B8;--cream-deeper:#C8B89A;--white:#FFFDF9;--off:#F7F2E8;--off2:#F0E8D8;--text:#2C1A10;--muted:#8C6E5A;--done:#2D6A4F;--done-bg:#D8EFE3;--border:rgba(160,57,42,0.12);--shadow:0 4px 24px rgba(44,26,16,0.08)}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:'DM Sans',sans-serif;background:var(--cream);color:var(--text);min-height:100vh}
+
+/* NAV */
+.top-nav{position:fixed;top:0;left:0;right:0;z-index:200;display:flex;align-items:center;justify-content:space-between;padding:0 40px;height:56px;background:rgba(242,234,216,0.95);backdrop-filter:blur(16px);border-bottom:1px solid var(--border)}
+.nav-brand{font-family:'Cormorant Garamond',serif;font-size:18px;font-weight:600;color:var(--terra);letter-spacing:3px;cursor:pointer}
+.nav-right{display:flex;align-items:center;gap:4px;overflow-x:auto}
+.nav-right::-webkit-scrollbar{display:none}
+.nav-item{padding:5px 12px;font-size:12px;color:var(--muted);cursor:pointer;border-radius:20px;transition:all .18s;background:none;border:none;font-family:'DM Sans',sans-serif;white-space:nowrap}
+.nav-item:hover{color:var(--terra);background:rgba(160,57,42,0.07)}
+.nav-item.active{color:var(--terra);font-weight:500;background:rgba(160,57,42,0.1)}
+
+/* PAGES */
+.page{display:none;padding-top:56px;min-height:100vh}
+.page.active{display:block}
+.inner{max-width:960px;margin:0 auto;padding:40px 24px 80px}
+
+/* ── HOME PAGE ── */
+.home-wrap{max-width:960px;margin:0 auto;padding:0;min-height:calc(100vh - 56px);display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:40px 24px}
+.home-date{font-size:11px;color:var(--muted);letter-spacing:3px;text-transform:uppercase;margin-bottom:28px}
+.home-logo-big{font-family:'Cormorant Garamond',serif;font-size:72px;font-weight:400;color:var(--terra);letter-spacing:8px;margin-bottom:16px;line-height:1}
+.home-tagline{font-family:'Cormorant Garamond',serif;font-size:22px;font-style:italic;color:var(--muted);margin-bottom:40px;max-width:520px;line-height:1.6}
+.home-quote-wrap{max-width:480px;margin:0 auto 40px}
+.home-quote{font-family:'Cormorant Garamond',serif;font-size:17px;font-style:italic;color:var(--text);line-height:1.7;opacity:.75}
+.home-enter{display:flex;gap:8px;flex-wrap:wrap;justify-content:center}
+.home-enter-btn{padding:10px 22px;border-radius:30px;border:1px solid var(--cream-deeper);background:var(--white);color:var(--muted);font-size:13px;cursor:pointer;transition:all .2s;font-family:'DM Sans',sans-serif}
+.home-enter-btn:hover{border-color:var(--terra);color:var(--terra)}
+
+/* BIRTHDAY BANNER on home */
+.bday-banner{background:var(--terra);border-radius:14px;padding:16px 24px;margin-bottom:32px;display:flex;align-items:center;gap:16px;max-width:480px;width:100%}
+.bday-banner-icon{font-size:28px;flex-shrink:0}
+.bday-banner-text{text-align:left}
+.bday-banner-name{font-family:'Cormorant Garamond',serif;font-size:20px;font-weight:600;color:var(--cream)}
+.bday-banner-msg{font-size:12px;color:rgba(242,234,216,0.7);margin-top:2px}
+
+/* SECTION HEADER */
+.section-header{margin-bottom:24px}
+.back-btn{display:inline-flex;align-items:center;gap:5px;font-size:12px;color:var(--muted);cursor:pointer;margin-bottom:12px;transition:color .15s;background:none;border:none;font-family:'DM Sans',sans-serif;padding:0}
+.back-btn:hover{color:var(--terra)}
+.section-title{font-family:'Cormorant Garamond',serif;font-size:34px;font-weight:600;color:var(--text);margin-bottom:4px}
+.section-sub{font-size:13px;color:var(--muted)}
+.section-divider{height:1px;background:var(--border);margin-top:12px}
+
+/* SHARED CARD */
+.s-card{background:var(--white);border-radius:14px;border:1px solid var(--border);overflow:hidden;margin-bottom:14px}
+.s-head{background:var(--terra);padding:14px 22px;display:flex;align-items:center;justify-content:space-between}
+.s-head-title{font-family:'Cormorant Garamond',serif;font-size:18px;color:var(--cream);font-weight:600}
+.s-head-sub{font-size:11px;color:rgba(242,234,216,0.6);margin-top:2px}
+
+/* ── BIRTHDAY SECTION ── */
+.bday-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:14px;padding:20px}
+.bday-card{background:var(--off);border-radius:12px;border:1px solid var(--border);padding:16px;text-align:center;position:relative;transition:all .2s}
+.bday-card:hover{transform:translateY(-2px);box-shadow:var(--shadow)}
+.bday-card.today{background:linear-gradient(135deg,#FAE4DF,#F2EAD8);border-color:var(--terra)}
+.bday-photo{width:60px;height:60px;border-radius:50%;margin:0 auto 10px;object-fit:cover;border:2px solid var(--cream-deeper);background:var(--cream-dark);display:flex;align-items:center;justify-content:center;font-family:'Cormorant Garamond',serif;font-size:22px;font-weight:600;color:var(--terra);overflow:hidden}
+.bday-photo img{width:100%;height:100%;object-fit:cover}
+.bday-name{font-size:13px;font-weight:500;color:var(--text);margin-bottom:3px}
+.bday-date{font-size:11px;color:var(--muted)}
+.bday-today-tag{position:absolute;top:8px;right:8px;font-size:9px;padding:2px 6px;border-radius:10px;background:var(--terra);color:var(--cream);font-weight:600}
+.bday-upcoming-tag{position:absolute;top:8px;right:8px;font-size:9px;padding:2px 6px;border-radius:10px;background:#FBF0D0;color:#6B4500;font-weight:600}
+.bday-add-card{background:var(--off);border-radius:12px;border:1.5px dashed var(--cream-deeper);padding:16px;text-align:center;cursor:pointer;transition:all .2s}
+.bday-add-card:hover{border-color:var(--terra);background:rgba(160,57,42,0.04)}
+.bday-add-icon{font-size:24px;margin-bottom:6px;color:var(--muted)}
+.bday-add-text{font-size:12px;color:var(--muted)}
+.bday-month-header{font-size:11px;font-weight:500;color:var(--terra);letter-spacing:2px;text-transform:uppercase;padding:14px 20px 6px;border-top:1px solid var(--border)}
+.bday-month-header:first-child{border-top:none}
+.bday-list-item{padding:12px 20px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:14px}
+.bday-list-item:last-child{border-bottom:none}
+.bday-list-photo{width:38px;height:38px;border-radius:50%;background:var(--cream-dark);display:flex;align-items:center;justify-content:center;font-family:'Cormorant Garamond',serif;font-size:16px;font-weight:600;color:var(--terra);flex-shrink:0;overflow:hidden}
+.bday-list-photo img{width:100%;height:100%;object-fit:cover}
+.bday-list-name{font-size:14px;font-weight:500;color:var(--text);flex:1}
+.bday-list-date{font-size:12px;color:var(--muted)}
+.bday-list-days{font-size:11px;padding:2px 8px;border-radius:10px;font-weight:500;flex-shrink:0}
+
+/* ADD BIRTHDAY FORM */
+.bday-form{padding:20px;display:none}
+.bday-form.open{display:block}
+.f-row{margin-bottom:12px}
+.f-lbl{font-size:10px;font-weight:500;color:var(--text);text-transform:uppercase;letter-spacing:.5px;margin-bottom:5px;display:block}
+.f-req{color:var(--terra)}
+.f-inp,.f-sel,.f-ta{width:100%;padding:9px 12px;border:1px solid var(--cream-deeper);border-radius:7px;font-size:13px;font-family:'DM Sans',sans-serif;color:var(--text);background:var(--off);outline:none;transition:border .18s}
+.f-inp:focus,.f-ta:focus,.f-sel:focus{border-color:var(--terra);background:var(--white)}
+.f-grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.f-btn{background:var(--terra);color:var(--cream);border:none;padding:10px;border-radius:7px;font-size:13px;font-weight:500;font-family:'DM Sans',sans-serif;cursor:pointer;transition:all .2s;width:100%}
+.f-btn:hover{background:var(--terra-dark)}
+.photo-upload{width:100%;padding:20px;border:1.5px dashed var(--cream-deeper);border-radius:8px;text-align:center;cursor:pointer;transition:all .2s;background:var(--off)}
+.photo-upload:hover{border-color:var(--terra)}
+.photo-preview{width:70px;height:70px;border-radius:50%;margin:0 auto 8px;background:var(--cream-dark);display:flex;align-items:center;justify-content:center;font-size:28px;overflow:hidden}
+.photo-preview img{width:100%;height:100%;object-fit:cover}
+
+/* ── PINTEREST / MOODBOARD ── */
+.pin-toolbar{padding:14px 20px;background:var(--off);border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.pin-search{flex:1;min-width:160px;padding:8px 14px;border:1px solid var(--cream-deeper);border-radius:20px;font-size:13px;font-family:'DM Sans',sans-serif;outline:none;background:var(--white);color:var(--text)}
+.pin-search:focus{border-color:var(--terra)}
+.pin-add-btn{padding:8px 18px;background:var(--terra);color:var(--cream);border:none;border-radius:20px;font-size:12px;font-weight:500;cursor:pointer;font-family:'DM Sans',sans-serif;white-space:nowrap;transition:all .2s}
+.pin-add-btn:hover{background:var(--terra-dark)}
+.pin-add-form{padding:16px 20px;background:var(--white);border-bottom:1px solid var(--border);display:none}
+.pin-add-form.open{display:block}
+.pin-grid{padding:16px;columns:2;column-gap:14px}
+@media(min-width:600px){.pin-grid{columns:3}}
+@media(min-width:900px){.pin-grid{columns:4}}
+.pin-item{break-inside:avoid;margin-bottom:14px;border-radius:10px;overflow:hidden;background:var(--off);border:1px solid var(--border);cursor:pointer;transition:all .2s;position:relative}
+.pin-item:hover{transform:translateY(-2px);box-shadow:var(--shadow)}
+.pin-img{width:100%;display:block;object-fit:cover}
+.pin-img-placeholder{width:100%;aspect-ratio:3/4;background:linear-gradient(135deg,var(--cream-dark),var(--off2));display:flex;align-items:center;justify-content:center;font-size:32px;color:var(--muted)}
+.pin-info{padding:10px 12px}
+.pin-title{font-size:12px;font-weight:500;color:var(--text);margin-bottom:3px}
+.pin-tag{font-size:10px;padding:2px 7px;border-radius:8px;background:var(--off2);color:var(--muted);display:inline-block}
+.pin-pin-btn{position:absolute;top:8px;right:8px;width:28px;height:28px;border-radius:50%;background:rgba(255,255,255,0.9);border:none;cursor:pointer;font-size:14px;display:flex;align-items:center;justify-content:center;opacity:0;transition:opacity .2s;box-shadow:0 2px 8px rgba(0,0,0,0.15)}
+.pin-item:hover .pin-pin-btn{opacity:1}
+.pin-del-btn{position:absolute;top:8px;left:8px;width:24px;height:24px;border-radius:50%;background:rgba(160,57,42,0.8);border:none;cursor:pointer;font-size:11px;color:white;display:flex;align-items:center;justify-content:center;opacity:0;transition:opacity .2s}
+.pin-item:hover .pin-del-btn{opacity:1}
+.pin-empty{padding:60px 20px;text-align:center;color:var(--muted)}
+.pin-empty-icon{font-size:40px;margin-bottom:12px}
+.pin-empty-text{font-size:14px;margin-bottom:4px}
+.pin-empty-sub{font-size:12px;opacity:.7}
+/* Lightbox */
+.lightbox{position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(44,26,16,0.92);z-index:999;display:none;align-items:center;justify-content:center;padding:20px}
+.lightbox.open{display:flex}
+.lightbox-img{max-width:90vw;max-height:85vh;border-radius:8px;object-fit:contain}
+.lightbox-close{position:absolute;top:20px;right:20px;width:36px;height:36px;border-radius:50%;background:rgba(255,255,255,0.15);border:none;color:white;font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center}
+.lightbox-info{position:absolute;bottom:20px;left:50%;transform:translateX(-50%);background:rgba(44,26,16,0.8);padding:10px 20px;border-radius:20px;color:var(--cream);font-size:13px;text-align:center}
+
+/* ── FMS ── */
+.fms-wrap{background:var(--white);border-radius:14px;border:1px solid var(--border);overflow:hidden}
+.bar-row{padding:11px 22px;border-bottom:1px solid var(--border)}
+.bar-row.off-bg{background:var(--off)}
+.bar-lbl{font-size:10px;color:var(--muted);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:7px}
+.pill-row{display:flex;gap:5px;flex-wrap:wrap}
+.wpill,.ppill{padding:4px 12px;border-radius:20px;border:1px solid var(--cream-deeper);font-size:11px;cursor:pointer;transition:all .15s;font-family:'DM Sans',sans-serif;color:var(--muted)}
+.wpill{background:var(--white)}
+.ppill{background:var(--off)}
+.wpill.active{background:var(--terra);color:var(--cream);border-color:var(--terra)}
+.ppill.active{background:var(--terra-dark);color:var(--cream);border-color:var(--terra-dark)}
+.fms-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--border);border-bottom:1px solid var(--border)}
+.fms-stat{background:var(--white);padding:12px;text-align:center}
+.fms-stat-n{font-family:'Cormorant Garamond',serif;font-size:22px;font-weight:600;color:var(--terra)}
+.fms-stat-l{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.4px;margin-top:1px}
+.ph-bar{padding:6px 22px;display:flex;align-items:center;gap:8px}
+.ph-name{font-size:10px;font-weight:500;color:var(--cream);letter-spacing:2px;text-transform:uppercase}
+.ph-ct{margin-left:auto;font-size:10px;color:rgba(242,234,216,0.5)}
+.st-row{border-bottom:1px solid var(--border)}
+.st-hdr{padding:12px 22px;display:flex;align-items:center;gap:10px;cursor:pointer;transition:background .12s}
+.st-hdr:hover{background:var(--off)}
+.sbbl{width:26px;height:26px;border-radius:50%;background:var(--terra);color:var(--cream);font-family:'Cormorant Garamond',serif;font-size:12px;font-weight:600;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:background .2s}
+.sbbl.done{background:var(--done)}
+.snm{font-size:13px;font-weight:500;color:var(--text);flex:1}
+.spg{font-size:11px;color:var(--muted);flex-shrink:0}
+.schv{color:var(--muted);font-size:10px;flex-shrink:0;transition:transform .2s}
+.schv.open{transform:rotate(90deg)}
+.st-body{display:none;border-top:1px solid var(--border)}
+.st-body.open{display:block}
+.trig{padding:8px 22px;background:var(--off2);display:flex;gap:9px}
+.trig-a{color:var(--terra);font-size:10px;margin-top:2px;flex-shrink:0}
+.trig-t{font-size:11px;color:var(--muted);line-height:1.5}
+.tr{padding:8px 22px;display:flex;align-items:flex-start;gap:10px;border-top:1px solid rgba(160,57,42,0.06);transition:background .12s}
+.tr:hover{background:var(--off)}
+.tr.mine{background:#FFF8F2;border-left:3px solid var(--terra)}
+.tr.dt{background:var(--done-bg)}
+.tcirc{width:18px;height:18px;border-radius:50%;border:1.5px solid var(--cream-deeper);flex-shrink:0;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .2s;background:var(--white);margin-top:1px}
+.tcirc.ticked{background:var(--done);border-color:var(--done)}
+.tcirc.ticked::after{content:'';display:block;width:4px;height:7px;border:2px solid white;border-top:none;border-left:none;transform:rotate(45deg) translate(-1px,-1px)}
+.tc{flex:1}
+.tt{font-size:12px;color:var(--text);line-height:1.4}
+.tt.cross{color:var(--done);text-decoration:line-through;opacity:.7}
+.tch{display:flex;gap:4px;flex-wrap:wrap;margin-top:3px}
+.chip{font-size:10px;padding:2px 7px;border-radius:10px;font-weight:500}
+.out{padding:8px 22px;background:var(--done-bg);display:flex;gap:9px;border-top:1px solid rgba(45,106,79,0.18)}
+.out-l{font-size:10px;font-weight:500;color:var(--done);text-transform:uppercase;letter-spacing:.4px;flex-shrink:0;margin-top:1px}
+.out-t{font-size:11px;color:var(--done);line-height:1.5}
+
+/* DELEGATION */
+.del-task-item{padding:12px 20px;border-bottom:1px solid var(--border);display:flex;align-items:flex-start;gap:12px}
+.del-task-item:last-child{border-bottom:none}
+.del-task-item:hover{background:var(--off)}
+.dtc{width:18px;height:18px;border-radius:50%;border:1.5px solid var(--cream-deeper);flex-shrink:0;cursor:pointer;display:flex;align-items:center;justify-content:center;background:var(--white);transition:all .2s;margin-top:1px}
+.dtc.done{background:var(--done);border-color:var(--done)}
+.dtc.done::after{content:'';display:block;width:4px;height:7px;border:2px solid white;border-top:none;border-left:none;transform:rotate(45deg) translate(-1px,-1px)}
+.person-sec{border-bottom:1px solid var(--border)}
+.person-sec:last-child{border-bottom:none}
+.person-hdr{padding:12px 20px;display:flex;align-items:center;gap:10px;cursor:pointer;background:var(--off);transition:background .15s}
+.person-hdr:hover{background:var(--off2)}
+.pav{width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:600;flex-shrink:0}
+.pname{font-size:13px;font-weight:500;color:var(--text);flex:1}
+.prole{font-size:11px;color:var(--muted)}
+.pchev{font-size:10px;color:var(--muted);transition:transform .2s}
+.pchev.open{transform:rotate(90deg)}
+.person-tasks{display:none}
+.person-tasks.open{display:block}
+
+/* EM */
+.em-table{width:100%;border-collapse:collapse}
+.em-table th{background:var(--terra);color:var(--cream);padding:9px 14px;font-size:10px;font-weight:500;text-align:left;letter-spacing:.5px;text-transform:uppercase}
+.em-table td{padding:10px 14px;border-bottom:1px solid var(--border);font-size:12px;vertical-align:middle}
+.em-table tr:last-child td{border-bottom:none}
+.em-table tr:hover td{background:var(--off)}
+.em-btn-row{display:flex;gap:5px}
+.emb{width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:600;cursor:pointer;transition:all .15s;border:2px solid transparent}
+.emb.R{background:#FAE4DF;color:#7A2820}
+.emb.Y{background:#FBF0D0;color:#6B4500}
+.emb.G{background:#D8EFE3;color:#2D6A4F}
+.emb.sel{border-color:var(--terra);transform:scale(1.1)}
+
+/* OTHER */
+.step-list{display:flex;flex-direction:column;overflow:hidden;border-radius:12px;border:1px solid var(--border);margin-bottom:14px}
+.step-i{display:flex;border-bottom:1px solid var(--border)}
+.step-i:last-child{border-bottom:none}
+.step-n{width:50px;background:var(--terra);color:var(--cream);font-family:'Cormorant Garamond',serif;font-size:20px;font-weight:600;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.step-b{padding:14px 20px;flex:1;background:var(--white)}
+.step-t{font-size:13px;font-weight:500;color:var(--text);margin-bottom:2px}
+.step-d{font-size:12px;color:var(--muted);line-height:1.5}
+.step-o{font-size:10px;margin-top:4px;color:var(--terra);font-weight:500}
+.rule-r{padding:11px 20px;border-bottom:1px solid var(--border);display:flex;gap:12px;background:var(--white)}
+.rule-r:last-child{border-bottom:none}
+.rule-c{font-size:12px;font-weight:500;color:var(--text);width:140px;flex-shrink:0}
+.rule-v{font-size:12px;color:var(--muted);flex:1;line-height:1.5}
+.rule-l{font-size:11px;font-weight:500;color:var(--terra);flex-shrink:0}
+.auth-row{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;border-bottom:1px solid var(--border)}
+.auth-row:last-child{border-bottom:none}
+.auth-row.ahdr{background:var(--off)}
+.acell{padding:10px 16px;font-size:12px;color:var(--text);display:flex;align-items:center}
+.auth-row.ahdr .acell{font-size:10px;font-weight:500;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;padding:8px 16px}
+.abadge{font-size:10px;padding:2px 8px;border-radius:20px;font-weight:500}
+.team-tbl{width:100%;border-collapse:collapse}
+.team-tbl th{background:var(--terra);color:var(--cream);padding:9px 14px;font-size:10px;font-weight:500;text-align:left;letter-spacing:.5px;text-transform:uppercase}
+.team-tbl td{padding:10px 14px;border-bottom:1px solid var(--border);font-size:12px;vertical-align:middle}
+.team-tbl tr:last-child td{border-bottom:none}
+.team-tbl tr:hover td{background:var(--off)}
+.tav{width:28px;height:28px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-size:10px;font-weight:600;margin-right:6px;vertical-align:middle}
+.ext-btn{display:flex;align-items:center;justify-content:center;gap:7px;width:100%;padding:11px;border:1.5px solid var(--terra);border-radius:7px;color:var(--terra);font-size:13px;font-weight:500;cursor:pointer;background:var(--white);transition:all .2s;font-family:'DM Sans',sans-serif;text-decoration:none;margin-top:10px}
+.ext-btn:hover{background:var(--terra);color:var(--cream)}
+.toast{position:fixed;bottom:22px;left:50%;transform:translateX(-50%) translateY(80px);background:var(--done);color:white;padding:10px 22px;border-radius:28px;font-size:12px;font-weight:500;transition:transform .3s cubic-bezier(.34,1.56,.64,1);z-index:998;white-space:nowrap;pointer-events:none}
+.toast.show{transform:translateX(-50%) translateY(0)}
+@media(max-width:600px){.top-nav{padding:0 14px}.nav-item{font-size:11px;padding:5px 9px}.inner{padding:24px 14px 60px}.fms-stats{grid-template-columns:repeat(2,1fr)}.auth-row{grid-template-columns:1fr 1fr}.auth-row .acell:nth-child(3),.auth-row .acell:nth-child(4),.auth-row.ahdr .acell:nth-child(3),.auth-row.ahdr .acell:nth-child(4){display:none}.rule-r{flex-direction:column;gap:3px}}
+</style>
+</head>
+<body>
+
+<nav class="top-nav">
+  <div class="nav-brand" onclick="go('home')">SILFIRA</div>
+  <div class="nav-right">
+    <button class="nav-item" onclick="go('fms')">FMS</button>
+    <button class="nav-item" onclick="go('delegation')">Delegation</button>
+    <button class="nav-item" onclick="go('moodboard')">Moodboard</button>
+    <button class="nav-item" onclick="go('birthdays')">Birthdays</button>
+    <button class="nav-item" onclick="go('reimbursement')">Reimbursement</button>
+    <button class="nav-item" onclick="go('petty')">Petty Cash</button>
+    <button class="nav-item" onclick="go('complaint')">Complaint</button>
+    <button class="nav-item" onclick="go('about')">About Us</button>
+  </div>
+</nav>
+
+<!-- ══ HOME ══ -->
+<div class="page active" id="page-home">
+  <div class="home-wrap">
+    <div class="home-date" id="home-date"></div>
+    <div id="bday-banner-wrap"></div>
+    <div class="home-logo-big">SILFIRA</div>
+    <div class="home-tagline" id="home-quote"></div>
+    <div class="home-enter">
+      <button class="home-enter-btn" onclick="go('fms')">FMS</button>
+      <button class="home-enter-btn" onclick="go('delegation')">Delegation</button>
+      <button class="home-enter-btn" onclick="go('moodboard')">Moodboard</button>
+      <button class="home-enter-btn" onclick="go('birthdays')">Birthdays</button>
+      <button class="home-enter-btn" onclick="go('reimbursement')">Reimbursement</button>
+      <button class="home-enter-btn" onclick="go('about')">About Us</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══ FMS ══ -->
+<div class="page" id="page-fms">
+<div class="inner">
+  <div class="section-header"><button class="back-btn" onclick="go('home')">← Back</button><div class="section-title">Flow Management System</div><div class="section-sub">27 stages · Select your role to highlight tasks · Tap to mark done</div><div class="section-divider"></div></div>
+  <div class="fms-wrap">
+    <div style="background:var(--terra);padding:16px 22px"><div style="font-family:'Cormorant Garamond',serif;font-size:20px;color:var(--cream);font-weight:600">Silfira FMS</div><div style="font-size:11px;color:rgba(242,234,216,0.65);margin-top:2px">27 Stages · All Micro-Tasks</div></div>
+    <div class="bar-row off-bg"><div class="bar-lbl">I am —</div><div class="pill-row" id="fms-who"></div></div>
+    <div class="bar-row"><div class="bar-lbl">Project —</div><div class="pill-row" id="fms-proj"></div></div>
+    <div class="fms-stats" id="fms-stats"></div>
+    <div id="fms-stages"></div>
+  </div>
+</div>
+</div>
+
+<!-- ══ DELEGATION ══ -->
+<div class="page" id="page-delegation">
+<div class="inner">
+  <div class="section-header"><button class="back-btn" onclick="go('home')">← Back</button><div class="section-title">Delegation</div><div class="section-sub">Daily task board · Submit tasks with completion date · PC tracks and follows up</div><div class="section-divider"></div></div>
+  <div class="s-card" style="margin-bottom:14px">
+    <div class="s-head"><div class="s-head-title">Submit a Task</div></div>
+    <div style="padding:20px">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+        <div class="f-row"><label class="f-lbl">Your Name <span class="f-req">*</span></label>
+          <select class="f-sel" id="del-person"><option value="">Select</option><option>Deepak</option><option>Jyoti</option><option>Kunal</option><option>Yash</option><option>Aman</option><option>Diya Arora</option><option>Poonam</option><option>Chetna</option><option>Balraj</option><option>Niranjani</option></select>
+        </div>
+        <div class="f-row"><label class="f-lbl">Project <span class="f-req">*</span></label>
+          <select class="f-sel" id="del-project"><option value="">Select</option><option>Project 1</option><option>Project 2</option><option>Project 3</option><option>Project 4</option><option>Project 5</option><option>Internal</option></select>
+        </div>
+      </div>
+      <div class="f-row"><label class="f-lbl">Task <span class="f-req">*</span></label><input class="f-inp" id="del-task" placeholder="What needs to be done?"></div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+        <div class="f-row"><label class="f-lbl">Due Date <span class="f-req">*</span></label><input class="f-inp" id="del-date" type="date"></div>
+        <div class="f-row"><label class="f-lbl">Priority</label>
+          <select class="f-sel" id="del-priority"><option>Normal</option><option>High</option><option>Urgent</option></select>
+        </div>
+      </div>
+      <button class="f-btn" onclick="submitDel()">Submit Task</button>
+    </div>
+  </div>
+  <div class="s-card" style="margin-bottom:14px">
+    <div class="s-head"><div class="s-head-title">All Team Tasks</div></div>
+    <div id="all-del-tasks"></div>
+  </div>
+  <div class="s-card">
+    <div class="s-head"><div class="s-head-title">Monday EM Score Board</div><div style="font-size:11px;color:rgba(242,234,216,0.6);margin-top:1px">🟢 Done on time · 🟡 Revised once · 🔴 Revised 2+ times</div></div>
+    <div style="overflow-x:auto"><table class="em-table"><thead><tr><th>Name</th><th>Role</th><th>This Week</th><th>Done</th><th>Revised</th></tr></thead><tbody id="em-tbody"></tbody></table></div>
+  </div>
+</div>
+</div>
+
+<!-- ══ MOODBOARD ══ -->
+<div class="page" id="page-moodboard">
+  <div style="padding-top:56px">
+    <div style="padding:28px 24px 10px;max-width:960px;margin:0 auto">
+      <button class="back-btn" onclick="go('home')">← Back</button>
+      <div class="section-title">Silfira Moodboard</div>
+      <div class="section-sub">Pin anything inspiring — images, ideas, references. Your team's creative library.</div>
+      <div class="section-divider" style="margin-bottom:0"></div>
+    </div>
+    <div class="s-card" style="border-radius:0;border-left:none;border-right:none;margin:0">
+      <div class="pin-toolbar">
+        <input class="pin-search" id="pin-search" placeholder="Search pins..." oninput="renderPins()">
+        <button class="pin-add-btn" onclick="togglePinForm()">+ Pin Image</button>
+      </div>
+      <div class="pin-add-form" id="pin-add-form">
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px">
+          <div><label class="f-lbl">Image URL or paste link</label><input class="f-inp" id="pin-url" placeholder="https://... or paste image URL"></div>
+          <div><label class="f-lbl">Title / Description</label><input class="f-inp" id="pin-title" placeholder="e.g. Japandi living room reference"></div>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:10px">
+          <div><label class="f-lbl">Tag</label><input class="f-inp" id="pin-tag" placeholder="e.g. tiles, furniture, colour"></div>
+          <div><label class="f-lbl">Pinned by</label><select class="f-sel" id="pin-by"><option value="">Select</option><option>Kritika</option><option>Deepak</option><option>Jyoti</option><option>Kunal</option><option>Yash</option><option>Aman</option><option>Poonam</option><option>Chetna</option></select></div>
+          <div><label class="f-lbl">Upload photo</label><input type="file" accept="image/*" id="pin-file" class="f-inp" style="padding:6px" onchange="handlePinUpload(event)"></div>
+        </div>
+        <div style="display:flex;gap:8px">
+          <button class="f-btn" style="width:auto;padding:9px 24px" onclick="addPin()">Pin It 📌</button>
+          <button class="f-btn" style="width:auto;padding:9px 24px;background:var(--off);color:var(--muted);border:1px solid var(--border)" onclick="togglePinForm()">Cancel</button>
+        </div>
+      </div>
+      <div id="pin-grid-wrap"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ BIRTHDAYS ══ -->
+<div class="page" id="page-birthdays">
+<div class="inner">
+  <div class="section-header"><button class="back-btn" onclick="go('home')">← Back</button><div class="section-title">Birthdays</div><div class="section-sub">Silfira team celebrations — never miss a birthday again 🎂</div><div class="section-divider"></div></div>
+  <div class="s-card" style="margin-bottom:14px">
+    <div class="s-head" style="display:flex;align-items:center;justify-content:space-between">
+      <div><div class="s-head-title">Team Birthdays</div></div>
+      <button style="background:rgba(255,255,255,0.15);border:none;color:var(--cream);padding:6px 14px;border-radius:20px;font-size:12px;cursor:pointer;font-family:'DM Sans',sans-serif" onclick="toggleBdayForm()">+ Add Birthday</button>
+    </div>
+    <div class="bday-form" id="bday-form">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+        <div class="f-row"><label class="f-lbl">Name <span class="f-req">*</span></label><input class="f-inp" id="bd-name" placeholder="Full name"></div>
+        <div class="f-row"><label class="f-lbl">Role</label><select class="f-sel" id="bd-role"><option value="">Select role</option><option>Founder</option><option>Interior Designer</option><option>3D Designer</option><option>Process Coordinator</option><option>CRM</option><option>Accountant</option><option>HR</option><option>EA</option></select></div>
+      </div>
+      <div class="f-row"><label class="f-lbl">Birthday <span class="f-req">*</span></label><input class="f-inp" id="bd-date" type="date"></div>
+      <div class="f-row">
+        <label class="f-lbl">Photo</label>
+        <div class="photo-upload" onclick="document.getElementById('bd-photo-input').click()">
+          <div class="photo-preview" id="bd-photo-preview">📷</div>
+          <div style="font-size:12px;color:var(--muted)">Tap to upload photo</div>
+          <input type="file" id="bd-photo-input" accept="image/*" style="display:none" onchange="handleBdayPhoto(event)">
+        </div>
+      </div>
+      <div style="display:flex;gap:8px">
+        <button class="f-btn" style="width:auto;padding:9px 24px" onclick="addBirthday()">Save Birthday 🎂</button>
+        <button class="f-btn" style="width:auto;padding:9px 24px;background:var(--off);color:var(--muted);border:1px solid var(--border)" onclick="toggleBdayForm()">Cancel</button>
+      </div>
+    </div>
+    <div id="bday-list"></div>
+  </div>
+  <div class="s-card">
+    <div class="s-head"><div class="s-head-title">Calendar View</div></div>
+    <div style="padding:20px" id="bday-calendar"></div>
+  </div>
+</div>
+</div>
+
+<!-- ══ REIMBURSEMENT ══ -->
+<div class="page" id="page-reimbursement">
+<div class="inner">
+  <div class="section-header"><button class="back-btn" onclick="go('home')">← Back</button><div class="section-title">Reimbursement</div><div class="section-sub">Submit expense claims — Balraj processes them</div><div class="section-divider"></div></div>
+  <div class="step-list">
+    <div class="step-i"><div class="step-n">1</div><div class="step-b"><div class="step-t">Save your receipt immediately</div><div class="step-d">Photograph the bill right away. No receipt = no reimbursement.</div><div class="step-o">You — at time of expense</div></div></div>
+    <div class="step-i"><div class="step-n">2</div><div class="step-b"><div class="step-t">Fill the form and submit</div><div class="step-d">Name, date, amount, category, project, reason. Attach receipt. Submit on Google Form pinned in team group.</div><div class="step-o">You — within 48hrs</div></div></div>
+    <div class="step-i"><div class="step-n">3</div><div class="step-b"><div class="step-t">Balraj reviews</div><div class="step-d">Under ₹2,000 approved directly. Above ₹2,000 goes to Kritika.</div><div class="step-o">Balraj — within 2 working days</div></div></div>
+    <div class="step-i"><div class="step-n">4</div><div class="step-b"><div class="step-t">Payment processed</div><div class="step-d">Approved in next salary cycle or within 5 days for urgent.</div><div class="step-o">Balraj — next cycle</div></div></div>
+  </div>
+  <div class="s-card">
+    <div class="s-head"><div class="s-head-title">Expense Categories and Limits</div></div>
+    <div class="rule-r"><div class="rule-c">Site travel</div><div class="rule-v">Auto/cab/metro to client site or market. Receipt above ₹200.</div><div class="rule-l">Up to ₹500/trip</div></div>
+    <div class="rule-r"><div class="rule-c">Market visit</div><div class="rule-v">Travel during approved market visits for active projects.</div><div class="rule-l">Up to ₹1,500/visit</div></div>
+    <div class="rule-r"><div class="rule-c">Client entertainment</div><div class="rule-v">Tea/coffee during meetings. Meals only if pre-approved.</div><div class="rule-l">Up to ₹800</div></div>
+    <div class="rule-r"><div class="rule-c">Office supplies</div><div class="rule-v">Stationery, printing, small materials.</div><div class="rule-l">Up to ₹1,000</div></div>
+    <div class="rule-r"><div class="rule-c">Not covered</div><div class="rule-v">Personal meals, travel, alcohol, clothing, non-work items.</div><div class="rule-l" style="color:var(--terra)">Not reimbursable</div></div>
+  </div>
+</div>
+</div>
+
+<!-- ══ PETTY CASH ══ -->
+<div class="page" id="page-petty">
+<div class="inner">
+  <div class="section-header"><button class="back-btn" onclick="go('home')">← Back</button><div class="section-title">Petty Cash</div><div class="section-sub">Log small cash or UPI expenses — submitted directly to Balraj</div><div class="section-divider"></div></div>
+  <div class="s-card">
+    <div class="s-head"><div class="s-head-title">Submit Petty Cash Entry</div></div>
+    <div style="padding:20px">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+        <div class="f-row"><label class="f-lbl">Date <span class="f-req">*</span></label><input class="f-inp" id="pc-date" type="date"></div>
+        <div class="f-row"><label class="f-lbl">Payer <span class="f-req">*</span></label>
+          <select class="f-sel" id="pc-payer"><option value="">Select</option><option>Deepak</option><option>Jyoti</option><option>Kunal</option><option>Yash</option><option>Aman</option><option>Diya Arora</option><option>Poonam</option><option>Chetna</option><option>Balraj</option><option>Niranjani</option></select>
+        </div>
+      </div>
+      <div class="f-row"><label class="f-lbl">Category <span class="f-req">*</span></label>
+        <select class="f-sel" id="pc-cat"><option value="">Select</option><option>Site travel</option><option>Market visit</option><option>Printing</option><option>Stationery</option><option>Client entertainment</option><option>Courier</option><option>Vendor payment</option><option>Miscellaneous</option></select>
+      </div>
+      <div class="f-row"><label class="f-lbl">Purpose <span class="f-req">*</span></label><input class="f-inp" id="pc-purpose" placeholder="e.g. AutoCAD prints for Project 3"></div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+        <div class="f-row"><label class="f-lbl">Vendor / Shop</label><input class="f-inp" id="pc-vendor" placeholder="Where was payment made"></div>
+        <div class="f-row"><label class="f-lbl">Amount ₹ <span class="f-req">*</span></label><input class="f-inp" id="pc-amount" type="number" placeholder="₹"></div>
+      </div>
+      <div class="f-row"><label class="f-lbl">Payment Mode <span class="f-req">*</span></label>
+        <select class="f-sel" id="pc-mode"><option value="">Select</option><option>Cash</option><option>UPI</option><option>Card</option></select>
+      </div>
+      <div class="f-row"><label class="f-lbl">Remarks <span class="f-req">*</span></label><textarea class="f-ta" id="pc-remarks" placeholder="Additional notes"></textarea></div>
+      <button class="f-btn" onclick="submitPC()">Submit to Balraj</button>
+      <div style="font-size:11px;color:var(--muted);text-align:center;margin-top:7px">Physical bill/receipt must reach Balraj within 24hrs</div>
+      <a class="ext-btn" href="https://docs.google.com/forms/d/e/1FAIpQLSdNlulX4FRw0OZpuGvvUVDqNIYO5_-UPmVo3tT53tz1QRUIRg/viewform" target="_blank">↗ Open original Petty Cash Google Form</a>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- ══ COMPLAINT ══ -->
+<div class="page" id="page-complaint">
+<div class="inner">
+  <div class="section-header"><button class="back-btn" onclick="go('home')">← Back</button><div class="section-title">Raise a Complaint</div><div class="section-sub">Safe and confidential — reviewed within 5 working days</div><div class="section-divider"></div></div>
+  <div class="s-card">
+    <div class="s-head"><div class="s-head-title">Submit a Complaint</div><div style="font-size:11px;color:rgba(242,234,216,0.6);margin-top:1px">All complaints go directly to Kritika</div></div>
+    <div style="padding:20px">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+        <div class="f-row"><label class="f-lbl">Your Name <span class="f-req">*</span></label><input class="f-inp" id="comp-name" placeholder="Full name"></div>
+        <div class="f-row"><label class="f-lbl">Type <span class="f-req">*</span></label>
+          <select class="f-sel" id="comp-type"><option value="">Select</option><option>Workplace behaviour</option><option>Workload or process issue</option><option>Salary or reimbursement</option><option>Interpersonal conflict</option><option>Safety concern</option><option>Suggestion or improvement</option><option>Other</option></select>
+        </div>
+      </div>
+      <div class="f-row"><label class="f-lbl">Describe the issue <span class="f-req">*</span></label><textarea class="f-ta" id="comp-desc" style="min-height:90px" placeholder="Describe clearly. Include dates and people involved if relevant."></textarea></div>
+      <div class="f-row"><label class="f-lbl">Preferred resolution</label>
+        <select class="f-sel" id="comp-res"><option value="">What are you hoping for?</option><option>Conversation with Kritika</option><option>Process change</option><option>Just want it on record</option><option>Not sure yet</option></select>
+      </div>
+      <button class="f-btn" onclick="submitComp()">Submit Complaint</button>
+    </div>
+  </div>
+  <div class="s-card">
+    <div class="s-head"><div class="s-head-title">What happens next?</div></div>
+    <div style="padding:18px 20px;display:flex;flex-direction:column;gap:13px">
+      <div style="display:flex;gap:12px"><div style="width:24px;height:24px;border-radius:50%;background:var(--terra);color:var(--cream);font-size:11px;font-weight:500;display:flex;align-items:center;justify-content:center;flex-shrink:0">1</div><div><div style="font-size:13px;font-weight:500;margin-bottom:2px">Goes directly to Kritika</div><div style="font-size:12px;color:var(--muted)">Your complaint reaches Kritika's portal immediately.</div></div></div>
+      <div style="display:flex;gap:12px"><div style="width:24px;height:24px;border-radius:50%;background:var(--terra);color:var(--cream);font-size:11px;font-weight:500;display:flex;align-items:center;justify-content:center;flex-shrink:0">2</div><div><div style="font-size:13px;font-weight:500;margin-bottom:2px">Reviewed within 3 days</div><div style="font-size:12px;color:var(--muted)">Kritika reviews and may speak to relevant people confidentially.</div></div></div>
+      <div style="display:flex;gap:12px"><div style="width:24px;height:24px;border-radius:50%;background:var(--terra);color:var(--cream);font-size:11px;font-weight:500;display:flex;align-items:center;justify-content:center;flex-shrink:0">3</div><div><div style="font-size:13px;font-weight:500;margin-bottom:2px">Resolution within 5 days</div><div style="font-size:12px;color:var(--muted)">You're informed of the outcome and next steps.</div></div></div>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- ══ ABOUT ══ -->
+<div class="page" id="page-about">
+<div class="inner">
+  <div class="section-header"><button class="back-btn" onclick="go('home')">← Back</button><div class="section-title">About Silfira</div><div class="section-sub">Our story, values, and the people behind the work</div><div class="section-divider"></div></div>
+  <div style="background:var(--terra);border-radius:14px;padding:36px;margin-bottom:14px;text-align:center">
+    <div style="font-family:'Cormorant Garamond',serif;font-size:38px;font-weight:600;color:var(--cream);letter-spacing:3px;margin-bottom:5px">SILFIRA</div>
+    <div style="font-size:10px;color:rgba(242,234,216,0.5);letter-spacing:3px;text-transform:uppercase;margin-bottom:4px">Est. 2019 · Ghitorni, New Delhi</div>
+    <div style="font-size:10px;color:rgba(242,234,216,0.35);letter-spacing:2px;text-transform:uppercase;margin-bottom:16px">A Kayysr Homes Company · Sister brand of Villaro</div>
+    <div style="font-family:'Cormorant Garamond',serif;font-size:17px;font-style:italic;color:var(--cream-dark);max-width:440px;margin:0 auto;line-height:1.6">"We don't just design spaces. We design the way people feel when they come home."</div>
+  </div>
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:12px;margin-bottom:14px">
+    <div style="background:var(--white);border-radius:12px;border:1px solid var(--border);padding:20px"><div style="font-family:'Cormorant Garamond',serif;font-size:18px;font-weight:600;color:var(--terra);margin-bottom:8px">Our Vision</div><div style="font-size:12px;color:var(--muted);line-height:1.7">Delhi's most trusted interior design studio — beautiful spaces and a process so seamless clients feel taken care of from first meeting to handover.</div></div>
+    <div style="background:var(--white);border-radius:12px;border:1px solid var(--border);padding:20px"><div style="font-family:'Cormorant Garamond',serif;font-size:18px;font-weight:600;color:var(--terra);margin-bottom:8px">Our Values</div><div style="font-size:12px;color:var(--muted);line-height:1.7"><strong style="color:var(--terra)">Ownership.</strong> Own your role fully.<br><br><strong style="color:var(--terra)">Craft.</strong> No shortcuts.<br><br><strong style="color:var(--terra)">Clarity.</strong> Communicate always.</div></div>
+    <div style="background:var(--white);border-radius:12px;border:1px solid var(--border);padding:20px"><div style="font-family:'Cormorant Garamond',serif;font-size:18px;font-weight:600;color:var(--terra);margin-bottom:8px">Our Office</div><div style="font-size:12px;color:var(--muted);line-height:1.7"><strong style="color:var(--terra)">Address:</strong> Ghitorni, New Delhi<br><br><strong style="color:var(--terra)">Hours:</strong> Mon–Sat, 10am–7pm<br><br><strong style="color:var(--terra)">Founded:</strong> Kritika, Pearl Academy 2019</div></div>
+  </div>
+  <div class="s-card">
+    <div class="s-head"><div class="s-head-title">Team Directory</div></div>
+    <div style="overflow-x:auto">
+      <table class="team-tbl">
+        <thead><tr><th>Name</th><th>Role</th><th>Phone</th><th>Email</th></tr></thead>
+        <tbody>
+          <tr><td><span class="tav" style="background:#FAE4DF;color:#7A2820">K</span>Kritika</td><td>Founder & Creative Director</td><td>—</td><td>—</td></tr>
+          <tr><td><span class="tav" style="background:#FAE4DF;color:#7A2820">P</span>Poonam</td><td>CRM</td><td>9821744155</td><td>poonam_crm@silfirainteriors.com</td></tr>
+          <tr><td><span class="tav" style="background:#D8EFE3;color:#1A5C3A">C</span>Chetna</td><td>Process Coordinator</td><td>9717135394</td><td>chetna_pc@silfirainteriors.com</td></tr>
+          <tr><td><span class="tav" style="background:#FBF0D0;color:#6B4500">B</span>Balraj</td><td>Accountant</td><td>—</td><td>—</td></tr>
+          <tr><td><span class="tav" style="background:#F0EDE8;color:#5A4A3A">N</span>Niranjani</td><td>Executive Assistant</td><td>9958677474</td><td>ea@silfirainteriors.com</td></tr>
+          <tr><td><span class="tav" style="background:#E4EEF8;color:#1A3A5C">D</span>Deepak</td><td>Interior Designer</td><td>9289252402</td><td>deepak928rajput@gmail.com</td></tr>
+          <tr><td><span class="tav" style="background:#E4EEF8;color:#1A3A5C">J</span>Jyoti</td><td>Interior Designer</td><td>9315637130</td><td>sehrawatjyoti.11@gmail.com</td></tr>
+          <tr><td><span class="tav" style="background:#E4EEF8;color:#1A3A5C">K</span>Kunal</td><td>Interior Designer</td><td>6388696991</td><td>kunal8765913744@gmail.com</td></tr>
+          <tr><td><span class="tav" style="background:#D8EFD8;color:#1A5C1A">Y</span>Yash</td><td>3D Designer</td><td>9058372615</td><td>Mittalyash820@gmail.com</td></tr>
+          <tr><td><span class="tav" style="background:#D8EFD8;color:#1A5C1A">A</span>Aman</td><td>3D Designer</td><td>8745974630</td><td>nautiyalaman18@gmail.com</td></tr>
+          <tr><td><span class="tav" style="background:#EDE9F8;color:#3C2A7A">D</span>Diya Arora</td><td>HR</td><td>9810409362</td><td>diyaarora763@gmail.com</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- LIGHTBOX -->
+<div class="lightbox" id="lightbox" onclick="closeLightbox()">
+  <button class="lightbox-close" onclick="closeLightbox()">✕</button>
+  <img class="lightbox-img" id="lightbox-img" src="" alt="">
+  <div class="lightbox-info" id="lightbox-info"></div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ── DATA ──────────────────────────────────────────────────────────────────────
+const TEAM=[
+  {n:'Deepak',r:'Interior Designer',av:'D',bg:'#E4EEF8',fg:'#1A3A5C'},
+  {n:'Jyoti',r:'Interior Designer',av:'J',bg:'#E4EEF8',fg:'#1A3A5C'},
+  {n:'Kunal',r:'Interior Designer',av:'K',bg:'#E4EEF8',fg:'#1A3A5C'},
+  {n:'Yash',r:'3D Designer',av:'Y',bg:'#D8EFD8',fg:'#1A5C1A'},
+  {n:'Aman',r:'3D Designer',av:'A',bg:'#D8EFD8',fg:'#1A5C1A'},
+  {n:'Diya Arora',r:'HR',av:'D',bg:'#EDE9F8',fg:'#3C2A7A'},
+  {n:'Poonam',r:'CRM',av:'P',bg:'#FAE4DF',fg:'#7A2820'},
+  {n:'Chetna',r:'Process Coordinator',av:'C',bg:'#D8EFE3',fg:'#1A5C3A'},
+  {n:'Balraj',r:'Accountant',av:'B',bg:'#FBF0D0',fg:'#6B4500'},
+  {n:'Niranjani',r:'Executive Assistant',av:'N',bg:'#F0EDE8',fg:'#5A4A3A'},
+];
+
+const OS={CRM:{bg:'#FAE4DF',fg:'#7A2820'},Designer:{bg:'#E4EEF8',fg:'#1A3A5C'},Coordinator:{bg:'#D8EFE3',fg:'#1A5C3A'},Kritika:{bg:'#EDE9F8',fg:'#3C2A7A'},Accountant:{bg:'#FBF0D0',fg:'#6B4500'},'3D Designer':{bg:'#D8EFD8',fg:'#1A5C1A'},EA:{bg:'#F0EDE8',fg:'#5A4A3A'}};
+const PHC={'Pre-Design':'#7A3A2A','Design':'#3A5A2A','Execution Prep':'#5A4A1A','Execution':'#1A4A3A','Completion':'#3A2A5A'};
+
+const QUOTES=[
+  "Design is not just what it looks like — it's how it works.",
+  "Every detail matters. Every deadline matters more.",
+  "A beautiful space is built by a disciplined team.",
+  "Process is what separates a great firm from a good one.",
+  "Show up, own your work, make it beautiful.",
+  "The best design comes from the clearest brief.",
+  "Craft without discipline is just decoration.",
+];
+
+const MONTHS=['January','February','March','April','May','June','July','August','September','October','November','December'];
+const DAYS=['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+
+// ── STATE ─────────────────────────────────────────────────────────────────────
+let fmsWho='all',fmsProj=0,openS=new Set(),tState={};
+let delTasks={},emScores={},openPersons=new Set();
+let pins=[],birthdays=[],bdPhotoData=null,pinFileData=null;
+
+// ── STORAGE ───────────────────────────────────────────────────────────────────
+function save(k,v){try{localStorage.setItem('sil4_'+k,JSON.stringify(v));}catch(e){}}
+function load(k,d=null){try{const v=localStorage.getItem('sil4_'+k);return v?JSON.parse(v):d;}catch(e){return d;}}
+// Also write to shared keys for founder/accountant portals
+function saveShared(k,v){try{localStorage.setItem('silfira_'+k,JSON.stringify(v));}catch(e){}}
+
+// ── NAVIGATION ─────────────────────────────────────────────────────────────────
+function go(id){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(l=>l.classList.remove('active'));
+  document.getElementById('page-'+id).classList.add('active');
+  const map={fms:0,delegation:1,moodboard:2,birthdays:3,reimbursement:4,petty:5,complaint:6,about:7};
+  if(map[id]!==undefined) document.querySelectorAll('.nav-item')[map[id]].classList.add('active');
+  window.scrollTo(0,0);
+  if(id==='fms') renderFMS();
+  if(id==='delegation'){renderDelTasks();renderEM();}
+  if(id==='moodboard') renderPins();
+  if(id==='birthdays'){renderBirthdays();renderBdayCalendar();}
+}
+
+// ── HOME ──────────────────────────────────────────────────────────────────────
+function initHome(){
+  const now=new Date();
+  document.getElementById('home-date').textContent=`${DAYS[now.getDay()]}, ${now.getDate()} ${MONTHS[now.getMonth()]} ${now.getFullYear()}`;
+  document.getElementById('home-quote').textContent=QUOTES[now.getDay()%QUOTES.length];
+  // Birthday banner
+  const bdays=load('birthdays',[]);
+  const today=`${String(now.getMonth()+1).padStart(2,'0')}-${String(now.getDate()).padStart(2,'0')}`;
+  const todayBdays=bdays.filter(b=>{
+    if(!b.date) return false;
+    const d=new Date(b.date);
+    const md=`${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+    return md===today;
+  });
+  const wrap=document.getElementById('bday-banner-wrap');
+  if(todayBdays.length){
+    wrap.innerHTML=todayBdays.map(b=>`
+      <div class="bday-banner">
+        <div class="bday-banner-icon">🎂</div>
+        <div class="bday-banner-text">
+          <div class="bday-banner-name">Happy Birthday, ${b.name}! 🎉</div>
+          <div class="bday-banner-msg">${b.role||'Silfira Team'} · Wishing you a wonderful day</div>
+        </div>
+      </div>`).join('');
+  } else {
+    // Check upcoming in next 7 days
+    const upcoming=bdays.filter(b=>{
+      if(!b.date) return false;
+      const d=new Date(b.date);
+      const thisYear=new Date(now.getFullYear(),d.getMonth(),d.getDate());
+      const diff=Math.ceil((thisYear-now)/(1000*60*60*24));
+      return diff>0&&diff<=7;
+    });
+    if(upcoming.length){
+      const b=upcoming[0];
+      const d=new Date(b.date);
+      const thisYear=new Date(now.getFullYear(),d.getMonth(),d.getDate());
+      const days=Math.ceil((thisYear-now)/(1000*60*60*24));
+      wrap.innerHTML=`<div class="bday-banner" style="background:var(--terra-dark)">
+        <div class="bday-banner-icon">🎈</div>
+        <div class="bday-banner-text">
+          <div class="bday-banner-name">${b.name}'s birthday in ${days} day${days>1?'s':''}!</div>
+          <div class="bday-banner-msg">Don't forget to wish them on ${MONTHS[d.getMonth()]} ${d.getDate()}</div>
+        </div>
+      </div>`;
+    } else { wrap.innerHTML=''; }
+  }
+}
+
+// ── FMS ───────────────────────────────────────────────────────────────────────
+const stages=[
+  {id:1,name:'Client Meeting',owner:'CRM',phase:'Pre-Design',trigger:'New lead received',tasks:[['Log lead in FMS','CRM'],['Schedule meeting within 48hrs','CRM'],['Send confirmation to client','CRM'],['Prepare client profile sheet','CRM'],['Kritika / Lead Designer attends','Kritika'],['Document scope, budget, timeline','CRM'],['Update FMS status','CRM']],output:'Client profile filled'},
+  {id:2,name:'Questionnaire',owner:'CRM',phase:'Pre-Design',trigger:'Client meeting done',tasks:[['Send questionnaire within 24hrs','CRM'],['Follow up if not filled in 48hrs','CRM'],['Review for completeness','CRM'],['Share with Lead Designer','CRM'],['Flag unusual requirements','CRM']],output:'Questionnaire in project folder'},
+  {id:3,name:'Concept Presentation R0',owner:'Designer',phase:'Pre-Design',trigger:'Questionnaire received',tasks:[['Update client name + date on template','Designer'],['Theme keywords — Lead Designer finalizes','Designer'],['Theme keywords — Kritika approves','Kritika'],['3 concepts prepared','Designer'],['Mandir room placement decided','Designer'],['Questionnaire cross-checked','Designer'],['CP approved by Lead Designer','Designer'],['CP approved by Kritika','Kritika'],['Revisions done','Designer'],['Client meeting fixed','CRM']],output:'Approved CP R0 ready'},
+  {id:4,name:'Quotation',owner:'Accountant',phase:'Pre-Design',trigger:'Client interested after R0',tasks:[['Designer shares scope','Designer'],['BOQ drafted room-wise','Accountant'],['Pricing per rate card','Accountant'],['Reviewed by Kritika','Kritika'],['Shared with client via CRM','CRM'],['Follow up within 3 days','CRM'],['Negotiation by Kritika if needed','Kritika'],['Client approval in writing','CRM'],['Advance collected + receipt','Accountant']],output:'Signed quotation + advance received'},
+  {id:5,name:'Client Onboarding',owner:'CRM',phase:'Pre-Design',trigger:'Quotation approved + advance received',tasks:[['Welcome hamper ordered','CRM'],['WhatsApp group created','CRM'],['Intro message sent','CRM'],['Hamper dispatched','CRM'],['Welcome message + timeline sent','CRM'],['Payment schedule shared','Accountant']],output:'Client onboarded, group active'},
+  {id:6,name:'Folder Making',owner:'Coordinator',phase:'Pre-Design',trigger:'Client onboarding complete',tasks:[['AutoCAD folder created','Coordinator'],['3D folder created','Coordinator'],['PPT folder created','Coordinator'],['PDF folder created','Coordinator'],['Client layout photos uploaded','Coordinator'],['Site visit folder created','Coordinator'],['Drawing subfolders created','Coordinator'],['Excel tracker created','Coordinator'],['Notes doc created','Coordinator'],['Folder link shared on group','Coordinator']],output:'Folder structure ready'},
+  {id:7,name:'Measurement Team Align',owner:'Coordinator',phase:'Design',trigger:'Folder making complete',tasks:[['Team availability confirmed','Coordinator'],['Site address + access shared','Coordinator'],['Date confirmed with client','CRM'],['Team briefed on scope','Coordinator'],['Checklist prepared','Coordinator']],output:'Measurement visit confirmed'},
+  {id:8,name:'Measurement + Site Visit',owner:'Coordinator',phase:'Design',trigger:'Team aligned + date confirmed',tasks:[['Team dispatched to site','Coordinator'],['Measurements recorded room-wise','Designer'],['Site photos taken','Designer'],['Videos uploaded same day','Designer'],['AutoCAD base plan drawn','Designer'],['Base plan reviewed','Designer'],['Everything uploaded same day','Coordinator']],output:'Measured base plan in folder'},
+  {id:9,name:'Concept Presentation R1',owner:'Designer',phase:'Design',trigger:'Base plan ready',tasks:[['Updated layout in concept','Designer'],['Space planning on actual dimensions','Designer'],['R1 updated with R0 feedback','Designer'],['Furniture layout in AutoCAD','Designer'],['CP R1 — Lead Designer approves','Designer'],['CP R1 — Kritika approves','Kritika'],['CRM schedules presentation','CRM'],['Client feedback documented','CRM']],output:'CP R1 presented'},
+  {id:10,name:'Detail Presentation for 3D',owner:'Designer',phase:'Design',trigger:'CP R1 client-approved',tasks:[['Wall colour/material specified','Designer'],['Skirting decided','Designer'],['Furniture references per room','Designer'],['Flooring per area decided','Designer'],['Lights vaguely marked','Designer'],['AC positions marked','Designer'],['CP edited to final','Designer'],['Furniture layout finalized','Designer'],['False ceiling marked','Designer'],['Briefing call with 3D team','Coordinator']],output:'3D brief handed to team'},
+  {id:11,name:'3D — Full Process',owner:'3D Designer',phase:'Design',trigger:'3D brief handed over',tasks:[['3D reviews brief — queries in 24hrs','3D Designer'],['Designer answers queries','Designer'],['BRIEF LOCKED — no new inputs','Kritika'],['R1: Base model built','3D Designer'],['R1: Materials applied','3D Designer'],['R1: Lighting set up','3D Designer'],['R1: Draft renders produced','3D Designer'],['R1 shared with Lead Designer','3D Designer'],['Corrections marked — 24hrs','Designer'],['R1 corrections done — 48hrs','3D Designer'],['R2: Refined renders','3D Designer'],['R2 shared with Kritika','3D Designer'],['Kritika approves / final corrections — 24hrs','Kritika'],['R2 corrections — LAST FREE ROUND','3D Designer'],['Client R1: Renders into PPT','3D Designer'],['Shared via CRM — 48hr deadline','CRM'],['Client feedback documented','CRM'],['Only design changes accepted','Kritika'],['Client R1 corrections — 72hrs','3D Designer'],['Client R2: Updated renders','CRM'],['Client R2 feedback documented','CRM'],['Client R2 corrections — FINAL','3D Designer'],['Final renders approved by Kritika','Kritika'],['Final 3D exported','3D Designer'],['Files saved to Final folder','Coordinator'],['3D LOCKED — changes chargeable','Kritika']],output:'Final approved 3D in folder'},
+  {id:12,name:'List of Specification',owner:'Designer',phase:'Design',trigger:'3D in progress (parallel)',tasks:[['Spec list room-wise started','Designer'],['Material, brand, finish specified','Designer'],['Quantities estimated','Designer'],['Lead Designer reviews','Designer'],['Kritika approves','Kritika'],['Saved + shared','Coordinator']],output:'Approved spec list in folder'},
+  {id:13,name:'Finishes Final',owner:'Designer',phase:'Design',trigger:'Spec list approved',tasks:[['Internal meeting to lock finishes','Designer'],['Paint colours finalized','Designer'],['Tile selections locked','Designer'],['Laminate/veneer locked','Designer'],['Hardware finalized','Designer'],['Finishes document prepared','Designer'],['Approved by Kritika — NO changes after','Kritika']],output:'Finishes signed off'},
+  {id:14,name:'Drawing for Vendor',owner:'Designer',phase:'Execution Prep',trigger:'Finishes finalized',tasks:[['Demolition drawing','Designer'],['Wardrobe drawing','Designer'],['Kitchen drawing','Designer'],['Flooring layout','Designer'],['False ceiling drawing','Designer'],['Electrical drawing','Designer'],['Reviewed by Lead Designer','Designer'],['Approved by Kritika','Kritika'],['Saved to vendor folder','Coordinator']],output:'Full drawing set ready'},
+  {id:15,name:'Final 3D',owner:'3D Designer',phase:'Execution Prep',trigger:'Drawings + finishes locked',tasks:[['3D updated with final finishes','3D Designer'],['Final renders room-wise','3D Designer'],['PPT with 3D + material board','3D Designer'],['PDF exported for client','3D Designer'],['Kritika approves','Kritika'],['Client presentation scheduled','CRM'],['Client feedback documented','CRM']],output:'Final 3D approved'},
+  {id:16,name:'Vendor Onboarding',owner:'Coordinator',phase:'Execution Prep',trigger:'Final 3D + drawings approved',tasks:[['Check Pre-Approved Vendor Panel','Coordinator'],['Trade-wise drawing packages compiled','Coordinator'],['Drawings Kritika-approved before sharing','Coordinator'],['Carpentry: 2 panel vendors — 48hr quote','Coordinator'],['Carpentry quotes compared','Coordinator'],['Carpentry vendor — Kritika approves','Kritika'],['Civil quote — 48hrs','Coordinator'],['Civil approved','Kritika'],['Electrical: 2 vendors — 48hr quote','Coordinator'],['Electrical approved','Kritika'],['Flooring quote','Coordinator'],['Flooring approved','Kritika'],['False ceiling quote','Coordinator'],['False ceiling approved','Kritika'],['POs raised — 24hrs','Accountant'],['Vendor groups created','Coordinator'],['Drawings shared on vendor groups','Coordinator'],['Start dates confirmed','Coordinator']],output:'All vendors onboarded'},
+  {id:17,name:'Drawing R1',owner:'Designer',phase:'Execution Prep',trigger:'Vendor feedback received',tasks:[['Vendor queries compiled','Coordinator'],['Revisions made','Designer'],['Approved by Kritika','Kritika'],['Shared with vendors','Coordinator'],['Saved to folder','Coordinator']],output:'Revised drawings with vendors'},
+  {id:18,name:'Site Supervision',owner:'Coordinator',phase:'Execution',trigger:'Vendors mobilized on site',tasks:[['Site visit schedule — min 2x/week','Coordinator'],['Daily site log with photos','Coordinator'],['Work checked against drawings','Coordinator'],['Material delivery tracked','Coordinator'],['Deviations flagged to Designer','Coordinator'],['Weekly site report on group','Coordinator'],['Kritika site visit — min 1x/week','Kritika'],['Client update every Friday','CRM'],['Payment milestone tracked + invoiced','Accountant']],output:'Weekly reports in folder'},
+  {id:19,name:'Furniture Presentation',owner:'Designer',phase:'Execution',trigger:'Civil/carpentry 60% done',tasks:[['Furniture list room-wise','Designer'],['References per piece','Designer'],['Market/vendor options sourced','Coordinator'],['Furniture PPT with pricing','Designer'],['Kritika reviews','Kritika'],['Client presentation','CRM'],['Selections documented','CRM'],['POs raised','Accountant']],output:'Furniture approved + POs raised'},
+  {id:20,name:'3D & Drawing Shared on Group',owner:'Coordinator',phase:'Execution',trigger:'3D + drawings approved',tasks:[['Final 3D into PDF','Coordinator'],['Drawings compiled per trade','Coordinator'],['Shared on client group','Coordinator'],['Client acknowledgement received','CRM']],output:'3D + drawings acknowledged'},
+  {id:21,name:'3D & Drawing Pasted on Site',owner:'Coordinator',phase:'Execution',trigger:'Shared on group',tasks:[['Prints arranged','Coordinator'],['Laminated prints prepared','Coordinator'],['Prints pasted room-wise','Coordinator'],['Photo taken and uploaded','Coordinator']],output:'Drawings on site walls'},
+  {id:22,name:'Market Visit',owner:'Coordinator',phase:'Execution',trigger:'Site at finishing stage',tasks:[['Visit date fixed','CRM'],['Items list prepared','Designer'],['Locations planned','Coordinator'],['Selections documented','Coordinator'],['Pricing negotiated','Coordinator'],['Approved by client','CRM'],['Orders placed','Coordinator']],output:'Selections done + orders placed'},
+  {id:23,name:'Shoot Align',owner:'CRM',phase:'Completion',trigger:'Site 90% complete',tasks:[['Photographer aligned','CRM'],['Shoot date fixed','CRM'],['Shot list by Designer','Designer'],['Decor/styling planned','Designer'],['Client informed','CRM'],['Confirmed with Kritika','Kritika']],output:'Shoot date + shot list ready'},
+  {id:24,name:'Decor Proposal',owner:'Designer',phase:'Completion',trigger:'Shoot aligned',tasks:[['Decor list room-wise','Designer'],['References compiled','Designer'],['Decor PPT prepared','Designer'],['Kritika reviews','Kritika'],['Client presentation done','CRM'],['Selections finalized','CRM'],['Items ordered','Coordinator']],output:'Decor approved + ordered'},
+  {id:25,name:'Snag List',owner:'Coordinator',phase:'Completion',trigger:'Site 95% complete',tasks:[['Full walkthrough by Coordinator','Coordinator'],['Snag list room-wise with photos','Coordinator'],['Snag list to vendors','Coordinator'],['Deadline per vendor','Coordinator'],['Kritika + Lead Designer walkthrough','Kritika'],['Second check post corrections','Coordinator'],['Client pre-handover walkthrough','CRM'],['Final clearance confirmed','Coordinator']],output:'All snags cleared'},
+  {id:26,name:'Site Shoot',owner:'CRM',phase:'Completion',trigger:'Snag cleared + decor placed',tasks:[['Site styled with decor','Designer'],['Photographer on site','CRM'],['Shot list executed','Designer'],['Kritika reviews same day','Kritika'],['Edited photos received','CRM'],['Photos uploaded','Coordinator'],['Best photos selected','Kritika']],output:'Final photos approved'},
+  {id:27,name:'Handover',owner:'CRM',phase:'Completion',trigger:'Shoot done + dues cleared',tasks:[['Final payment collected','Accountant'],['Final invoice issued','Accountant'],['Handover document prepared','Coordinator'],['Handover kit prepared','Coordinator'],['Handover meeting with client','CRM'],['Kritika attends','Kritika'],['Testimonial requested','CRM'],['Project marked CLOSED','Coordinator'],['Folder archived','Coordinator'],['Thank you gift sent','CRM']],output:'Project closed, client handed over'},
+];
+
+const PROJS=['Project 1','Project 2','Project 3','Project 4','Project 5'];
+function sk(p,s,t){return p+'_'+s+'_'+t;}
+
+function initFMS(){
+  const wp=document.getElementById('fms-who');
+  ['all','Kritika','Designer','CRM','Coordinator','Accountant','3D Designer'].forEach(w=>{
+    const b=document.createElement('button');b.className='wpill'+(w==='all'?' active':'');b.textContent=w==='all'?'Everyone':w;b.onclick=()=>{fmsWho=w;document.querySelectorAll('.wpill').forEach(x=>x.classList.remove('active'));b.classList.add('active');renderFMS();};wp.appendChild(b);
+  });
+  const pp=document.getElementById('fms-proj');
+  PROJS.forEach((p,i)=>{
+    const b=document.createElement('button');b.className='ppill'+(i===0?' active':'');b.textContent=p;b.onclick=()=>{fmsProj=i;document.querySelectorAll('.ppill').forEach(x=>x.classList.remove('active'));b.classList.add('active');renderFMS();};pp.appendChild(b);
+  });
+  tState=load('fms_tstate',{});
+}
+
+function renderFMS(){
+  let tot=0,dn=0;
+  stages.forEach(s=>s.tasks.forEach((_,ti)=>{tot++;if(tState[sk(fmsProj,s.id,ti)])dn++;}));
+  document.getElementById('fms-stats').innerHTML=`<div class="fms-stat"><div class="fms-stat-n">${dn}</div><div class="fms-stat-l">Done</div></div><div class="fms-stat"><div class="fms-stat-n">${tot-dn}</div><div class="fms-stat-l">Pending</div></div><div class="fms-stat"><div class="fms-stat-n">${Math.round(dn/tot*100||0)}%</div><div class="fms-stat-l">Complete</div></div><div class="fms-stat"><div class="fms-stat-n">27</div><div class="fms-stat-l">Stages</div></div>`;
+  let html='',lp='',ps={},pc={};
+  stages.forEach(s=>{pc[s.phase]=(pc[s.phase]||0)+1;});
+  stages.forEach(s=>{
+    if(s.phase!==lp&&!ps[s.phase]){html+=`<div class="ph-bar" style="background:${PHC[s.phase]||'#5A3A2A'}"><div class="ph-name">${s.phase}</div><div class="ph-ct">${pc[s.phase]} stages</div></div>`;ps[s.phase]=true;lp=s.phase;}
+    const io=openS.has(s.id),dn2=s.tasks.filter((_,ti)=>tState[sk(fmsProj,s.id,ti)]).length;
+    html+=`<div class="st-row"><div class="st-hdr" onclick="toggleSt(${s.id})"><div class="sbbl ${dn2===s.tasks.length?'done':''}">${s.id}</div><div class="snm">${s.name}</div><div class="spg">${dn2}/${s.tasks.length}</div><div class="schv ${io?'open':''}">&#9654;</div></div>`;
+    if(io){
+      html+=`<div class="st-body open"><div class="trig"><div class="trig-a">&#9654;</div><div class="trig-t">Starts when: ${s.trigger}</div></div>`;
+      s.tasks.forEach(([task,owner],ti)=>{
+        const k=sk(fmsProj,s.id,ti),id=tState[k]||false,im=fmsWho!=='all'&&owner===fmsWho;
+        const {bg,fg}=OS[owner]||{bg:'#F0EDE8',fg:'#5A4A3A'};
+        html+=`<div class="tr${im?' mine':''}${id?' dt':''}"><div class="tcirc${id?' ticked':''}" onclick="toggleT(${fmsProj},${s.id},${ti})"></div><div class="tc"><div class="tt${id?' cross':''}">${task}</div><div class="tch"><span class="chip" style="background:${bg};color:${fg}">${owner}</span>${id?'<span class="chip" style="background:#D8EFE3;color:#2D6A4F">Done</span>':''}${im&&!id?'<span class="chip" style="background:#FAE4DF;color:#7A2820">Your task</span>':''}</div></div></div>`;
+      });
+      html+=`<div class="out"><span class="out-l">Done when&nbsp;</span><span class="out-t">${s.output}</span></div></div>`;
+    }
+    html+='</div>';
+  });
+  document.getElementById('fms-stages').innerHTML=html;
+}
+function toggleSt(id){if(openS.has(id))openS.delete(id);else openS.add(id);renderFMS();}
+function toggleT(p,s,t){const k=sk(p,s,t);tState[k]=!tState[k];save('fms_tstate',tState);renderFMS();}
+
+// ── DELEGATION ─────────────────────────────────────────────────────────────────
+function submitDel(){
+  const person=document.getElementById('del-person').value,proj=document.getElementById('del-project').value,task=document.getElementById('del-task').value.trim(),due=document.getElementById('del-date').value,pri=document.getElementById('del-priority').value;
+  if(!person||!proj||!task||!due){alert('Please fill all required fields.');return;}
+  if(!delTasks[person]) delTasks[person]=[];
+  delTasks[person].unshift({task,project:proj,due,priority:pri,status:'',id:Date.now().toString()});
+  save('del_tasks',delTasks);
+  saveShared('my_tasks',delTasks);
+  ['del-person','del-project','del-task','del-date'].forEach(id=>document.getElementById(id).value='');
+  document.getElementById('del-priority').value='Normal';
+  renderDelTasks();renderEM();
+  showToast(`Task added for ${person}`);
+}
+
+function renderDelTasks(){
+  const board=document.getElementById('all-del-tasks');
+  board.innerHTML=TEAM.map(m=>{
+    const arr=delTasks[m.n]||[];
+    const isOpen=openPersons.has(m.n);
+    const pending=arr.filter(t=>t.status!=='done').length;
+    return `<div class="person-sec">
+      <div class="person-hdr" onclick="togglePerson('${m.n}')">
+        <div class="pav" style="background:${m.bg};color:${m.fg}">${m.av}</div>
+        <div class="pname">${m.n}</div>
+        <div class="prole">${m.r}</div>
+        <div style="font-size:11px;color:var(--muted);margin-right:8px">${pending} pending · ${arr.length} total</div>
+        <div class="pchev ${isOpen?'open':''}">&#9654;</div>
+      </div>
+      <div class="person-tasks ${isOpen?'open':''}">
+        ${arr.length?arr.map((t,i)=>`
+          <div class="del-task-item">
+            <div class="dtc ${t.status}" onclick="setDelStatus('${m.n}',${i},'done')"></div>
+            <div style="flex:1">
+              <div style="font-size:13px;font-weight:500;color:var(--text);${t.status==='done'?'text-decoration:line-through;opacity:.6':''}">${t.task}</div>
+              <div style="display:flex;gap:7px;flex-wrap:wrap;margin-top:4px">
+                ${t.project?`<span class="chip" style="background:var(--off2);color:var(--muted)">${t.project}</span>`:''}
+                ${t.priority&&t.priority!=='Normal'?`<span class="chip" style="background:#FAE4DF;color:#7A2820">${t.priority}</span>`:''}
+                ${t.due?`<span style="font-size:11px;color:${isPast(t.due)&&t.status!=='done'?'var(--terra)':'var(--muted)'}">${isPast(t.due)&&t.status!=='done'?'⚠ Overdue: ':'Due: '}${fmtDate(t.due)}</span>`:''}
+                ${t.status==='done'?'<span class="chip" style="background:#D8EFE3;color:#2D6A4F">Done</span>':''}
+                ${t.status==='revised'?'<span class="chip" style="background:#FBF0D0;color:#6B4500">Revised</span>':''}
+              </div>
+            </div>
+            <div style="display:flex;gap:5px;flex-shrink:0">
+              ${t.status!=='done'?`<button style="padding:3px 9px;border-radius:6px;font-size:10px;cursor:pointer;border:none;background:#D8EFE3;color:#2D6A4F;font-family:'DM Sans',sans-serif" onclick="setDelStatus('${m.n}',${i},'done')">Done</button>`:''}
+              ${t.status!=='done'?`<button style="padding:3px 9px;border-radius:6px;font-size:10px;cursor:pointer;border:none;background:#FBF0D0;color:#6B4500;font-family:'DM Sans',sans-serif" onclick="setDelStatus('${m.n}',${i},'revised')">Revise</button>`:''}
+            </div>
+          </div>`).join(''):'<div style="padding:12px 20px 12px 60px;font-size:12px;color:var(--muted)">No tasks yet</div>'}
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function togglePerson(n){if(openPersons.has(n))openPersons.delete(n);else openPersons.add(n);renderDelTasks();}
+function setDelStatus(n,i,s){delTasks[n][i].status=s;save('del_tasks',delTasks);saveShared('my_tasks',delTasks);renderDelTasks();renderEM();showToast(s==='done'?'Marked done':'Marked for revision');}
+
+function renderEM(){
+  document.getElementById('em-tbody').innerHTML=TEAM.map(m=>{
+    const k=`em_${m.n}`;const s=emScores[k]||'';
+    const arr=delTasks[m.n]||[];
+    const dn=arr.filter(t=>t.status==='done').length;
+    const rv=arr.filter(t=>t.status==='revised').length;
+    return `<tr>
+      <td style="font-weight:500"><span style="width:24px;height:24px;border-radius:50%;background:${m.bg};color:${m.fg};display:inline-flex;align-items:center;justify-content:center;font-size:10px;margin-right:6px;vertical-align:middle">${m.av}</span>${m.n}</td>
+      <td style="color:var(--muted);font-size:11px">${m.r}</td>
+      <td><div class="em-btn-row">
+        <div class="emb R${s==='R'?' sel':''}" onclick="setEM('${m.n}','R',this)" title="Red">R</div>
+        <div class="emb Y${s==='Y'?' sel':''}" onclick="setEM('${m.n}','Y',this)" title="Yellow">Y</div>
+        <div class="emb G${s==='G'?' sel':''}" onclick="setEM('${m.n}','G',this)" title="Green">G</div>
+      </div></td>
+      <td style="color:var(--done);font-weight:500">${dn}</td>
+      <td style="color:#6B4500">${rv}</td>
+    </tr>`;
+  }).join('');
+}
+function setEM(n,v,el){const k=`em_${n}`;emScores[k]=emScores[k]===v?'':v;save('em_scores',emScores);saveShared('em_scores',emScores);renderEM();showToast('EM score updated');}
+
+// ── MOODBOARD ──────────────────────────────────────────────────────────────────
+function togglePinForm(){document.getElementById('pin-add-form').classList.toggle('open');}
+
+function handlePinUpload(e){
+  const file=e.target.files[0];if(!file)return;
+  const reader=new FileReader();
+  reader.onload=ev=>{pinFileData=ev.target.result;};
+  reader.readAsDataURL(file);
+}
+
+function addPin(){
+  const url=document.getElementById('pin-url').value.trim();
+  const title=document.getElementById('pin-title').value.trim();
+  const tag=document.getElementById('pin-tag').value.trim();
+  const by=document.getElementById('pin-by').value;
+  const imgSrc=pinFileData||url;
+  if(!imgSrc&&!title){alert('Add an image URL or upload a photo, and a title.');return;}
+  pins.unshift({id:Date.now().toString(),src:imgSrc,url,title,tag,by,date:new Date().toISOString()});
+  save('pins',pins);
+  ['pin-url','pin-title','pin-tag','pin-by'].forEach(id=>document.getElementById(id).value='');
+  document.getElementById('pin-file').value='';
+  pinFileData=null;
+  togglePinForm();
+  renderPins();
+  showToast('Pinned! 📌');
+}
+
+function renderPins(){
+  const q=(document.getElementById('pin-search')||{}).value||'';
+  const filtered=pins.filter(p=>{
+    if(!q) return true;
+    return (p.title||'').toLowerCase().includes(q.toLowerCase())||(p.tag||'').toLowerCase().includes(q.toLowerCase())||(p.by||'').toLowerCase().includes(q.toLowerCase());
+  });
+  const wrap=document.getElementById('pin-grid-wrap');
+  if(!filtered.length){
+    wrap.innerHTML=`<div class="pin-empty"><div class="pin-empty-icon">📌</div><div class="pin-empty-text">No pins yet</div><div class="pin-empty-sub">Click "+ Pin Image" to add your first inspiration</div></div>`;
+    return;
+  }
+  wrap.innerHTML=`<div class="pin-grid">${filtered.map(p=>`
+    <div class="pin-item" onclick="openLightbox('${p.id}')">
+      <button class="pin-del-btn" onclick="event.stopPropagation();deletePin('${p.id}')">✕</button>
+      ${p.src?`<img class="pin-img" src="${p.src}" alt="${p.title||''}" onerror="this.style.display='none'">`:
+        `<div class="pin-img-placeholder">🖼</div>`}
+      <div class="pin-info">
+        ${p.title?`<div class="pin-title">${p.title}</div>`:''}
+        <div style="display:flex;gap:5px;flex-wrap:wrap;margin-top:4px">
+          ${p.tag?`<span class="pin-tag">${p.tag}</span>`:''}
+          ${p.by?`<span class="pin-tag" style="background:#FAE4DF;color:#7A2820">${p.by}</span>`:''}
+        </div>
+      </div>
+    </div>`).join('')}</div>`;
+}
+
+function openLightbox(id){
+  const p=pins.find(x=>x.id===id);if(!p||!p.src)return;
+  document.getElementById('lightbox-img').src=p.src;
+  document.getElementById('lightbox-info').textContent=`${p.title||''}${p.tag?' · '+p.tag:''}${p.by?' · '+p.by:''}`;
+  document.getElementById('lightbox').classList.add('open');
+}
+function closeLightbox(){document.getElementById('lightbox').classList.remove('open');}
+function deletePin(id){pins=pins.filter(p=>p.id!==id);save('pins',pins);renderPins();showToast('Pin removed');}
+
+// ── BIRTHDAYS ─────────────────────────────────────────────────────────────────
+function toggleBdayForm(){document.getElementById('bday-form').classList.toggle('open');}
+
+function handleBdayPhoto(e){
+  const file=e.target.files[0];if(!file)return;
+  const reader=new FileReader();
+  reader.onload=ev=>{
+    bdPhotoData=ev.target.result;
+    const preview=document.getElementById('bd-photo-preview');
+    preview.innerHTML=`<img src="${bdPhotoData}" alt="photo">`;
+  };
+  reader.readAsDataURL(file);
+}
+
+function addBirthday(){
+  const name=document.getElementById('bd-name').value.trim();
+  const date=document.getElementById('bd-date').value;
+  const role=document.getElementById('bd-role').value;
+  if(!name||!date){alert('Name and birthday date are required.');return;}
+  birthdays.push({id:Date.now().toString(),name,date,role,photo:bdPhotoData});
+  birthdays.sort((a,b)=>{
+    const da=new Date(a.date),db=new Date(b.date);
+    return (da.getMonth()*100+da.getDate())-(db.getMonth()*100+db.getDate());
+  });
+  save('birthdays',birthdays);
+  document.getElementById('bd-name').value='';
+  document.getElementById('bd-date').value='';
+  document.getElementById('bd-role').value='';
+  document.getElementById('bd-photo-preview').innerHTML='📷';
+  bdPhotoData=null;
+  toggleBdayForm();
+  renderBirthdays();
+  renderBdayCalendar();
+  initHome();
+  showToast(`${name}'s birthday saved! 🎂`);
+}
+
+function renderBirthdays(){
+  const now=new Date();
+  const today=`${String(now.getMonth()+1).padStart(2,'0')}-${String(now.getDate()).padStart(2,'0')}`;
+  const list=document.getElementById('bday-list');
+  if(!birthdays.length){list.innerHTML='<div style="padding:28px;text-align:center;color:var(--muted);font-size:13px">No birthdays added yet. Click "+ Add Birthday" to start.</div>';return;}
+
+  let html='';let lastMonth='';
+  birthdays.forEach(b=>{
+    const d=new Date(b.date);
+    const month=MONTHS[d.getMonth()];
+    const md=`${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+    const isToday=md===today;
+    const thisYear=new Date(now.getFullYear(),d.getMonth(),d.getDate());
+    const diff=Math.ceil((thisYear-now)/(1000*60*60*24));
+    const daysText=isToday?'Today! 🎉':diff>0?`In ${diff} day${diff>1?'s':''}`:diff===0?'Today!':'Passed';
+    if(month!==lastMonth){html+=`<div class="bday-month-header">${month}</div>`;lastMonth=month;}
+    html+=`<div class="bday-list-item">
+      <div class="bday-list-photo">${b.photo?`<img src="${b.photo}" alt="${b.name}">`:(b.name[0]||'?')}</div>
+      <div class="bday-list-name">${b.name}${b.role?`<div style="font-size:11px;color:var(--muted);font-weight:400">${b.role}</div>`:''}</div>
+      <div class="bday-list-date">${d.getDate()} ${MONTHS[d.getMonth()]}</div>
+      <div class="bday-list-days" style="background:${isToday?'var(--terra)':'var(--off)'};color:${isToday?'var(--cream)':'var(--muted)'}">${daysText}</div>
+      <button style="padding:3px 9px;border-radius:6px;font-size:10px;cursor:pointer;border:1px solid var(--border);background:var(--off);color:var(--muted);font-family:'DM Sans',sans-serif;margin-left:4px" onclick="deleteBday('${b.id}')">✕</button>
+    </div>`;
+  });
+  list.innerHTML=html;
+}
+
+function deleteBday(id){birthdays=birthdays.filter(b=>b.id!==id);save('birthdays',birthdays);renderBirthdays();renderBdayCalendar();initHome();showToast('Birthday removed');}
+
+function renderBdayCalendar(){
+  const now=new Date();
+  const cal=document.getElementById('bday-calendar');
+  const byMonth={};
+  birthdays.forEach(b=>{
+    const d=new Date(b.date);
+    const m=d.getMonth();
+    if(!byMonth[m]) byMonth[m]=[];
+    byMonth[m].push(b);
+  });
+  if(!Object.keys(byMonth).length){cal.innerHTML='<div style="text-align:center;color:var(--muted);font-size:13px">Add birthdays to see them here</div>';return;}
+  // Show all 12 months
+  const months=Array.from({length:12},(_,i)=>i);
+  cal.innerHTML=`<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:12px">
+    ${months.map(m=>{
+      const mBdays=byMonth[m]||[];
+      const isCurrent=m===now.getMonth();
+      return `<div style="background:${isCurrent?'#FAE4DF':'var(--off)'};border-radius:10px;padding:14px;border:1px solid ${isCurrent?'var(--terra)':'var(--border)'}">
+        <div style="font-size:11px;font-weight:500;color:${isCurrent?'var(--terra)':'var(--muted)'};text-transform:uppercase;letter-spacing:1px;margin-bottom:8px">${MONTHS[m]}</div>
+        ${mBdays.length?mBdays.map(b=>`<div style="display:flex;align-items:center;gap:7px;margin-bottom:5px">
+          <div style="width:22px;height:22px;border-radius:50%;background:var(--cream-dark);display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:600;flex-shrink:0;overflow:hidden">${b.photo?`<img src="${b.photo}" style="width:100%;height:100%;object-fit:cover">`:b.name[0]}</div>
+          <div style="flex:1"><div style="font-size:12px;font-weight:500;color:var(--text)">${b.name}</div><div style="font-size:10px;color:var(--muted)">${new Date(b.date).getDate()} ${MONTHS[m]}</div></div>
+        </div>`).join(''):'<div style="font-size:11px;color:var(--muted)">No birthdays</div>'}
+      </div>`;
+    }).join('')}
+  </div>`;
+}
+
+// ── FORMS ──────────────────────────────────────────────────────────────────────
+function submitPC(){
+  const d=document.getElementById('pc-date').value,p=document.getElementById('pc-payer').value,c=document.getElementById('pc-cat').value,pu=document.getElementById('pc-purpose').value.trim(),a=document.getElementById('pc-amount').value,mo=document.getElementById('pc-mode').value,r=document.getElementById('pc-remarks').value.trim();
+  if(!d||!p||!c||!pu||!a||!mo||!r){alert('Please fill all required fields.');return;}
+  // Save to shared store for Balraj
+  try{const arr=JSON.parse(localStorage.getItem('silfira_petty_cash')||'[]');arr.push({id:Date.now().toString(),date:d,payer:p,category:c,purpose:pu,amount:parseInt(a),mode:mo,remarks:r});localStorage.setItem('silfira_petty_cash',JSON.stringify(arr));}catch(e){}
+  ['pc-date','pc-payer','pc-cat','pc-purpose','pc-vendor','pc-amount','pc-mode','pc-remarks'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
+  showToast('Petty cash submitted to Balraj ✓');
+}
+
+function submitComp(){
+  const n=document.getElementById('comp-name').value.trim(),t=document.getElementById('comp-type').value,d=document.getElementById('comp-desc').value.trim();
+  if(!n||!t||!d){alert('Please fill name, type, and description.');return;}
+  // Save to shared store for Kritika
+  try{const arr=JSON.parse(localStorage.getItem('silfira_complaints')||'[]');arr.push({id:Date.now().toString(),name:n,type:t,description:d,resolution:document.getElementById('comp-res').value,status:'new',date:new Date().toISOString()});localStorage.setItem('silfira_complaints',JSON.stringify(arr));}catch(e){}
+  ['comp-name','comp-type','comp-desc','comp-res'].forEach(id=>document.getElementById(id).value='');
+  showToast('Complaint submitted to Kritika ✓');
+}
+
+// ── UTILS ──────────────────────────────────────────────────────────────────────
+function fmtDate(d){if(!d)return '';const dt=new Date(d+'T00:00:00');return dt.toLocaleDateString('en-IN',{day:'2-digit',month:'short'});}
+function isPast(d){if(!d)return false;const dt=new Date(d+'T00:00:00');const now=new Date();now.setHours(0,0,0,0);return dt<now;}
+function showToast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),3000);}
+
+// ── INIT ──────────────────────────────────────────────────────────────────────
+pins=load('pins',[]);
+birthdays=load('birthdays',[]);
+delTasks=load('del_tasks',{});
+emScores=load('em_scores',{});
+initHome();
+initFMS();
+</script>
+</body>
+</html>
